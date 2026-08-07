@@ -1,0 +1,34 @@
+def user_id_finder(input_path):
+    """
+    Finds the most common from_id in personal chats.
+    """
+    from collections import Counter
+
+    import ijson
+
+    chats_with_id = Counter()
+    display_name = {}
+
+    with open(input_path, "rb") as f:
+        for chat in ijson.items(f, "chats.list.item"):
+            if chat.get("type") != "personal_chat":
+                continue
+
+            ids_here = set()
+
+            for msg in chat.get("messages", []):
+                from_id = msg.get("from_id")
+                if not from_id:
+                    continue
+                ids_here.add(from_id)
+                display_name.setdefault(from_id, msg.get("from") or "?")
+
+            for fid in ids_here:
+                chats_with_id[fid] += 1
+
+    top = chats_with_id.most_common(1)
+    if not top:
+        raise SystemExit(
+            f"in file {input_path} no personal chats with messages were found")
+    your_id = top[0][0]
+    return your_id
