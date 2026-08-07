@@ -198,11 +198,11 @@ def run(input_path="result.json", out_path="dataset.jsonl"):
         stats = {"chats": 0, "sessions": 0,
                 "windows": 0, "samples": 0, "my_turns": 0}
         with open(input_path, "rb") as f, open(out_path, "w", encoding="utf-8") as out:
+            my_from_id = user_id_finder(input_path)
             for chat in ijson.items(f, "chats.list.item"):
                 if chat.get("type") != "personal_chat":
                     continue
                 name = normalize_text(chat.get("name")) or "acquaintance"
-                my_from_id = user_id_finder(input_path)
                 msgs = list(iter_messages(chat, my_from_id))
                 if not msgs:
                     continue
