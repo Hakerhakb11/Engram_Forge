@@ -124,37 +124,36 @@ def sanitize_text(text: str, stats: Counter) -> str:
 
     return text
 
-def sanitize_jsonl(in_path: str = 'dataset.jsonl', out_path: str = 'dataset_sanitized.jsonl') -> Counter:
-    stats = Counter()
-    bad_lines = 0
+def run(input_path: str = 'dataset.jsonl', output_path: str = 'dataset_sanitized.jsonl') -> Counter:
+    try:
+        print("\nSANITIZE Start -----------------.")
 
-    with open(in_path, "r", encoding="utf-8") as fin, open(out_path, "w", encoding="utf-8") as fout:
-        for i, line in enumerate(fin, start=1):
-            line = line.strip()
-            if not line:
-                continue
-            try:
-                obj = json.loads(line)
-            except Exception:  # noqa: BLE001
-                bad_lines += 1
-                continue
+        stats = Counter()
+        bad_lines = 0
+        with open(input_path, "r", encoding="utf-8") as fin, open(output_path, "w", encoding="utf-8") as fout:
+            for i, line in enumerate(fin, start=1):
+                line = line.strip()
+                if not line:
+                    continue
+                try:
+                    obj = json.loads(line)
+                except Exception:  # noqa: BLE001
+                    bad_lines += 1
+                    continue
 
-            msgs = obj.get("messages", [])
-            if isinstance(msgs, list):
-                for msg in msgs:
-                    if isinstance(msg, dict) and "content" in msg and isinstance(msg["content"], str):
-                        msg["content"] = sanitize_text(msg["content"], stats)
+                msgs = obj.get("messages", [])
+                if isinstance(msgs, list):
+                    for msg in msgs:
+                        if isinstance(msg, dict) and "content" in msg and isinstance(msg["content"], str):
+                            msg["content"] = sanitize_text(msg["content"], stats)
 
-            fout.write(json.dumps(obj, ensure_ascii=False) + "\n")
+                fout.write(json.dumps(obj, ensure_ascii=False) + "\n")
 
-    stats["bad_lines"] = bad_lines
-    return stats
-
-
-def run():
-    print("\nSANITIZE Start -----------------.")
-    stats = sanitize_jsonl()
-    print("SANITIZE Done.")
-    print("Stats:")
-    for k, v in stats.most_common():
-        print(f"  {k}: {v}")
+        stats["bad_lines"] = bad_lines
+        print("SANITIZE Done.")
+        print("Stats:")
+        for k, v in stats.most_common():
+            print(f"  {k}: {v}")
+        return stats
+    except FileNotFoundError:
+            print(f"{input_path} file not found:")

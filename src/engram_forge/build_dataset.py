@@ -193,36 +193,39 @@ def setUserName(name):
 
 
 def run(input_path="result.json", out_path="dataset.jsonl"):
-    print("\nBUILD DATASET Start -----------------.")
-    stats = {"chats": 0, "sessions": 0,
-             "windows": 0, "samples": 0, "my_turns": 0}
-    with open(input_path, "rb") as f, open(out_path, "w", encoding="utf-8") as out:
-        for chat in ijson.items(f, "chats.list.item"):
-            if chat.get("type") != "personal_chat":
-                continue
-            name = normalize_text(chat.get("name")) or "acquaintance"
-            my_from_id = user_id_finder(input_path)
-            msgs = list(iter_messages(chat, my_from_id))
-            if not msgs:
-                continue
-            stats["chats"] += 1
-            for session in split_sessions(msgs):
-                stats["sessions"] += 1
-                for window in to_windows(to_turns(session)):
-                    stats["windows"] += 1
-                    sample = window_to_sample(window, name)
-                    if sample:
-                        out.write(json.dumps(
-                            sample, ensure_ascii=False) + "\n")
-                        stats["samples"] += 1
-                        stats["my_turns"] += sum(
-                            1 for m in sample["messages"] if m["role"] == "assistant"
-                        )
-    print("Personal chats with text:", stats["chats"])
-    print("Sessions:", stats["sessions"])
-    print("Windows:", stats["windows"])
-    print("Examples in dataset:", stats["samples"])
-    print("My replies (assistant-turns):", stats["my_turns"])
+    try:
+        print("\nBUILD DATASET Start -----------------.")
+        stats = {"chats": 0, "sessions": 0,
+                "windows": 0, "samples": 0, "my_turns": 0}
+        with open(input_path, "rb") as f, open(out_path, "w", encoding="utf-8") as out:
+            for chat in ijson.items(f, "chats.list.item"):
+                if chat.get("type") != "personal_chat":
+                    continue
+                name = normalize_text(chat.get("name")) or "acquaintance"
+                my_from_id = user_id_finder(input_path)
+                msgs = list(iter_messages(chat, my_from_id))
+                if not msgs:
+                    continue
+                stats["chats"] += 1
+                for session in split_sessions(msgs):
+                    stats["sessions"] += 1
+                    for window in to_windows(to_turns(session)):
+                        stats["windows"] += 1
+                        sample = window_to_sample(window, name)
+                        if sample:
+                            out.write(json.dumps(
+                                sample, ensure_ascii=False) + "\n")
+                            stats["samples"] += 1
+                            stats["my_turns"] += sum(
+                                1 for m in sample["messages"] if m["role"] == "assistant"
+                            )
+        print("Personal chats with text:", stats["chats"])
+        print("Sessions:", stats["sessions"])
+        print("Windows:", stats["windows"])
+        print("Examples in dataset:", stats["samples"])
+        print("My replies (assistant-turns):", stats["my_turns"])
+    except FileNotFoundError:
+        print(f"{input_path} file not found:")
 
 
 if __name__ == "__main__":
