@@ -5,7 +5,7 @@ import re
 
 import ijson
 
-from src.engram_forge.utils.user_id_finder import user_id_finder
+from engram_forge.utils.user_id_finder import user_id_finder
 
 IN_PATH = "result.json"
 OUT_PATH = "dataset.jsonl"
@@ -20,14 +20,9 @@ MAX_CHARS = 3000            # maximum length of an example
 MIN_MY_TURNS = 1            # there must be at least one reply from me
 MIN_PARTNER_TURNS = 1       # and at least one reply from the partner
 
-
-MY_NAME = "Me"
+MY_NAME = "Me"              # Default name for the user
 MY_FROM_ID = user_id_finder()
 
-SYSTEM_TMPL = (
-    "You are — " + MY_NAME + ". You are chatting with a person named {name}. "
-    "Reply briefly and naturally, exactly as you usually do in private messages."
-)
 
 multi_nl_re = re.compile(r"\n{3,}")
 spaces_re = re.compile(r"[ \t]+")
@@ -183,6 +178,11 @@ def window_to_sample(window, contact_name):
     partner_turns = len(window) - my_turns
     if my_turns < MIN_MY_TURNS or partner_turns < MIN_PARTNER_TURNS:
         return None
+        
+    SYSTEM_TMPL = (
+        "You are — " + MY_NAME + ". You are chatting with a person named {name}. "
+        "Reply briefly and naturally, exactly as you usually do in private messages."
+    )
     messages = [
         {"role": "system", "content": SYSTEM_TMPL.format(name=contact_name)}]
     for is_me, text in window:
@@ -190,8 +190,13 @@ def window_to_sample(window, contact_name):
             {"role": "assistant" if is_me else "user", "content": text})
     return {"messages": messages, "contact": contact_name}
 
+def setUserName(name):
+    global MY_NAME
+    MY_NAME = name
 
-def main():
+
+def run():
+    print("\nBUILD DATASET Start -----------------.")
     stats = {"chats": 0, "sessions": 0,
              "windows": 0, "samples": 0, "my_turns": 0}
     with open(IN_PATH, "rb") as f, open(OUT_PATH, "w", encoding="utf-8") as out:
@@ -223,4 +228,4 @@ def main():
 
 
 if __name__ == "__main__":
-    main()
+    run()
