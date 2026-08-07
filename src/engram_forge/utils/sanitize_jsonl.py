@@ -124,8 +124,7 @@ def sanitize_text(text: str, stats: Counter) -> str:
 
     return text
 
-
-def sanitize_jsonl(in_path: str, out_path: str) -> Counter:
+def sanitize_jsonl(in_path: str = 'dataset.jsonl', out_path: str = 'dataset_sanitized.jsonl') -> Counter:
     stats = Counter()
     bad_lines = 0
 
@@ -154,7 +153,7 @@ def sanitize_jsonl(in_path: str, out_path: str) -> Counter:
 
 def run():
     print("\nSANITIZE Start -----------------.")
-    stats = sanitize_jsonl('dataset.jsonl', 'dataset_sanitized.jsonl')
+    stats = sanitize_jsonl()
     print("SANITIZE Done.")
     print("Stats:")
     for k, v in stats.most_common():

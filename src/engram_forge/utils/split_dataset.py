@@ -1,11 +1,7 @@
 # split_dataset.py — train/val split multi-turn dataset
-def run():
+def run(input_path = "dataset_sanitized.jsonl", train_out_path = "train_v2.jsonl", value_out_path = "val_v2.jsonl"):
     import json
     import random
-
-    INP = "dataset_sanitized.jsonl"
-    TRAIN_OUT = "train_v2.jsonl"
-    VAL_OUT = "val_v2.jsonl"
 
     VAL_FRACTION = 0.03
     VAL_MIN = 300
@@ -14,7 +10,7 @@ def run():
 
     rows = []
     print("\nSPLIT Start -----------------.")
-    with open(INP, "r", encoding="utf-8") as f:
+    with open(input_path, "r", encoding="utf-8") as f:
         for line in f:
             obj = json.loads(line)
             msgs = obj.get("messages", [])
@@ -30,10 +26,10 @@ def run():
     val_n = max(VAL_MIN, int(len(rows) * VAL_FRACTION))
     val, train = rows[:val_n], rows[val_n:]
 
-    with open(TRAIN_OUT, "w", encoding="utf-8") as f:
+    with open(train_out_path, "w", encoding="utf-8") as f:
         f.writelines(json.dumps(r, ensure_ascii=False) + "\n" for r in train)
 
-    with open(VAL_OUT, "w", encoding="utf-8") as f:
+    with open(value_out_path, "w", encoding="utf-8") as f:
         f.writelines(json.dumps(r, ensure_ascii=False) + "\n" for r in val)
 
     print("DONE.")
