@@ -2,6 +2,5 @@
 .venv
 __pycache__
 SPEC.md
-result.json
-dataset.jsonl
-dataset_sanitized.jsonl
+*.json
+*.jsonl
