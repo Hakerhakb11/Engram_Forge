@@ -1,5 +1,8 @@
 # split_dataset.py — train/val split multi-turn dataset
-def run(input_path = "dataset_sanitized.jsonl", train_out_path = "train_v2.jsonl", value_out_path = "val_v2.jsonl"):
+from pathlib import Path
+
+
+def run(input_path="dataset_sanitized.jsonl", train_out_path="train_v2.jsonl", value_out_path="val_v2.jsonl"):
     import json
     import random
 
@@ -18,7 +21,7 @@ def run(input_path = "dataset_sanitized.jsonl", train_out_path = "train_v2.jsonl
                 has_assistant = any(
                     m.get("role") == "assistant" and m.get("content") for m in msgs)
                 has_user = any(m.get("role") == "user" and m.get("content")
-                                for m in msgs)
+                               for m in msgs)
                 if has_assistant and has_user:
                     rows.append(obj)
 
@@ -28,14 +31,17 @@ def run(input_path = "dataset_sanitized.jsonl", train_out_path = "train_v2.jsonl
         val, train = rows[:val_n], rows[val_n:]
 
         with open(train_out_path, "w", encoding="utf-8") as f:
-            f.writelines(json.dumps(r, ensure_ascii=False) + "\n" for r in train)
+            f.writelines(json.dumps(r, ensure_ascii=False) +
+                         "\n" for r in train)
 
         with open(value_out_path, "w", encoding="utf-8") as f:
             f.writelines(json.dumps(r, ensure_ascii=False) + "\n" for r in val)
 
         print("DONE.")
+        print("Delete: " + input_path)
+        Path(input_path).unlink(missing_ok=True)
         print("All:", len(rows))
         print("Train:", len(train))
         print("Val:", len(val))
     except FileNotFoundError:
-            print(f"{input_path} file not found:")
+        print(f"{input_path} file not found:")
