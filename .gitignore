@@ -4,3 +4,8 @@ __pycache__
 SPEC.md
 *.json
 *.jsonl
+train.log
+Чат*.txt
+Chat*.txt
+lora_v2
+unsloth_compiled_cache
