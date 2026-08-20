@@ -2,6 +2,7 @@
 import json
 import re
 from collections import Counter
+from pathlib import Path
 
 # ---------- Regex patterns ----------
 EMAIL_RE = re.compile(
@@ -124,6 +125,7 @@ def sanitize_text(text: str, stats: Counter) -> str:
 
     return text
 
+
 def run(input_path: str = 'dataset.jsonl', output_path: str = 'dataset_sanitized.jsonl') -> Counter:
     try:
         print("\nSANITIZE Start -----------------.")
@@ -145,15 +147,18 @@ def run(input_path: str = 'dataset.jsonl', output_path: str = 'dataset_sanitized
                 if isinstance(msgs, list):
                     for msg in msgs:
                         if isinstance(msg, dict) and "content" in msg and isinstance(msg["content"], str):
-                            msg["content"] = sanitize_text(msg["content"], stats)
+                            msg["content"] = sanitize_text(
+                                msg["content"], stats)
 
                 fout.write(json.dumps(obj, ensure_ascii=False) + "\n")
 
         stats["bad_lines"] = bad_lines
         print("SANITIZE Done.")
+        print("Delete: " + (input_path))
+        Path(input_path).unlink(missing_ok=True)
         print("Stats:")
         for k, v in stats.most_common():
             print(f"  {k}: {v}")
         return stats
     except FileNotFoundError:
-            print(f"{input_path} file not found:")
+        print(f"{input_path} file not found:")
