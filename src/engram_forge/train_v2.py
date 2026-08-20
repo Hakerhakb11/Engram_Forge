@@ -2,11 +2,12 @@
 # Run WITH WSL Linux with train.sh.
 #
 # Checkpoint stoage ~/tgstyle/out
-# Final LoRA copy in project folder (lora_v2/).
+# Final LoRA copy in project folder (lora_adapters/{lora_file}).
 
 import os  # noqa: I001
 import shutil  # noqa: F401
 import argparse
+from pathlib import Path
 
 from unsloth import FastModel  # unsloth import must be before transformers
 from datasets import load_dataset
@@ -16,8 +17,7 @@ from trl import SFTConfig, SFTTrainer
 from unsloth.chat_templates import train_on_responses_only
 
 MAX_SEQ_LEN = 1024
-
-PROJECT_DIR = os.path.dirname(os.path.abspath(__file__))
+PROJECT_DIR = Path(__file__).resolve().parent.parent.parent
 TRAIN_FILE = os.path.join(PROJECT_DIR, "train_v2.jsonl")
 VAL_FILE = os.path.join(PROJECT_DIR, "val_v2.jsonl")
 
@@ -27,7 +27,7 @@ SAVE_STEPS = 50  # checkpoint ~every 30 min
 
 
 def run(model_name, epochs_num, lora_name):
-    FINAL_LORA_DIR = os.path.join(PROJECT_DIR, lora_name)
+    LORA_DIR = os.path.join(PROJECT_DIR, "lora_adapters", lora_name)
     model, tokenizer = FastModel.from_pretrained(
         model_name=model_name,
         max_seq_length=MAX_SEQ_LEN,
@@ -117,9 +117,9 @@ def run(model_name, epochs_num, lora_name):
     trainer.train(resume_from_checkpoint=last_ckpt)
 
     # Best adapter (by eval_loss) saved to the project folder
-    model.save_pretrained(FINAL_LORA_DIR)
-    tokenizer.save_pretrained(FINAL_LORA_DIR)
-    print("\n\nDONE!!!! LoRA SAVE IN:", FINAL_LORA_DIR)
+    model.save_pretrained(LORA_DIR)
+    tokenizer.save_pretrained(LORA_DIR)
+    print("\n\nDONE!!!! LoRA SAVE IN:", LORA_DIR)
 
 
 if __name__ == "__main__":
