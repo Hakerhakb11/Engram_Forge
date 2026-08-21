@@ -30,7 +30,7 @@ def test_chat_run(active_lora: str):
 def serve_model_run(active_lora: str):
     command = [
         sys.executable,
-        str(TEST_CHAT_PATH),
+        str(SERVE_MODEL_PATH),
         "--lora_name", active_lora,
     ]
     subprocess.run(command, check=True)
