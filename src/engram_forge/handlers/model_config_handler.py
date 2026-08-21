@@ -104,15 +104,11 @@ def change_model_handler():
 
         selected_model = None
 
-        try:
+        if choice.isdigit() and 1 <= int(choice) <= len(models):
             index = int(choice) - 1
             if 0 <= index < len(models):
                 selected_model = models[index]["id"]
-            else:
-                print("[ERROR] Invalid number selection.")
-                pause()
-                continue
-        except ValueError:
+        else:
             print("[ERROR] Invalid input.")
             pause()
             continue
@@ -127,7 +123,7 @@ def change_model_handler():
     config["selected_model"] = selected_model
     save_config(config)
 
-    print(f"\nModel successfully saved to config: {selected_model}")
+    print(f"\nSet '{selected_model}' as model for training")
 
 
 def change_epochs_count_handler():
