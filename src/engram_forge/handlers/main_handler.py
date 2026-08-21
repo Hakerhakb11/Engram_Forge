@@ -6,9 +6,10 @@ def main_handler():
         clear_screen()
         print("\nWelcome to Engram Forge!"
               "\nWhat you want to do?"
-              "\n1. Start"
-              "\n2. Data management (chat import and show chats)"
+              "\n1. Training menu"
+              "\n2. Data menu (chat import and show chats)"
               "\n3. Change chat prompt (facts about you)"
+              "\n4. Model Hub & Inference menu"
               "\n0. Exit"
               )
 
@@ -30,6 +31,15 @@ def main_handler():
                     set_chat_prompt,
                 )
                 set_chat_prompt()
+                pause()
+
+            case "4":
+                from engram_forge.handlers.model_inference_handler import (
+                    model_inference_handler,
+                )
+
+                clear_screen()
+                model_inference_handler()
                 pause()
 
             case "0":
