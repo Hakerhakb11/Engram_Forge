@@ -2,7 +2,7 @@ from pathlib import Path
 
 from engram_forge.handlers.ui_helpers import clear_screen, pause
 
-TRAIN_SCRIPT_PATH = Path(__file__).resolve().parent / "train_v2.py"
+TRAIN_SCRIPT_PATH = Path(__file__).resolve().parent.parent / "train_v2.py"
 
 def handle_checkpoint_cleanup():
     """Checks existence of old checkpoints and offers to clear them"""
@@ -53,6 +53,7 @@ def train_run_handler():
 def train_handler():
     while True:
         clear_screen()
+        print("\n=== Training menu ===")
         print("What you want to do?"
               "\n1. Start training"
               "\n2. Build Dataset"
