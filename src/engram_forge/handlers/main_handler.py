@@ -37,7 +37,6 @@ def main_handler():
                 from engram_forge.handlers.model_inference_handler import (
                     model_inference_handler,
                 )
-
                 clear_screen()
                 model_inference_handler()
                 pause()

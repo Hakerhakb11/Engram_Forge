@@ -55,7 +55,9 @@ def model_inference_handler():
         choice = input(": ")
         match choice:
             case "1":
+                clear_screen()
                 select_lora_handler()
+                pause()
 
             case "2":
                 clear_screen()
@@ -67,6 +69,7 @@ def model_inference_handler():
                 pause()
 
             case "3":
+                clear_screen()
                 if not active_lora:
                     print("\n[!] Please select a LoRA adapter first.")
                     pause()
@@ -75,6 +78,7 @@ def model_inference_handler():
                 pause()
 
             case "4":
+                clear_screen()
                 if not active_lora:
                     print("\n[!] Please select a LoRA adapter first.")
                     pause()
