@@ -10,7 +10,7 @@ def pause():
     input("\nPress Enter to return...")
 
 
-def check_os_check_os_if_linux() -> bool:
+def check_os_if_linux() -> bool:
     current_os = platform.system()
 
     if current_os != "Linux":
