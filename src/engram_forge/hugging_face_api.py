@@ -2,6 +2,7 @@ import requests
 
 url = "https://huggingface.co/api/models"
 
+
 def search_model(model_name):
     params = {
         "search": model_name,
