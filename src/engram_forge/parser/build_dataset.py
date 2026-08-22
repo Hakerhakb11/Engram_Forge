@@ -7,8 +7,8 @@ from pathlib import Path
 
 import ijson
 
+from engram_forge.get_user_config import get_base_prompt, get_name
 from engram_forge.parser.user_id_finder import user_id_finder
-from engram_forge.utils.get_user_config import get_name, get_system_prompt
 
 SESSION_GAP = 4 * 3600      # gap of more than 4 hours = new dialog
 BURST_GAP = 300             # same author after a pause >5 min = new dialog
@@ -20,8 +20,8 @@ MAX_CHARS = 3000            # maximum length of an example
 MIN_MY_TURNS = 1            # there must be at least one reply from me
 MIN_PARTNER_TURNS = 1       # and at least one reply from the partner
 
-my_name = get_name()  # Name for the user, from my_name.txt
-system_tmpl = get_system_prompt()  # System prompt, from system_prompt.txt
+my_name = get_name()
+system_tmpl = get_base_prompt()
 
 multi_nl_re = re.compile(r"\n{3,}")
 spaces_re = re.compile(r"[ \t]+")

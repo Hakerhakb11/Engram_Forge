@@ -9,3 +9,5 @@ train.log
 Chat*.txt
 lora_v2
 unsloth_compiled_cache
+exported_models
+Modelfile

@@ -1,7 +1,7 @@
 import json
 from pathlib import Path
 
-from engram_forge.handlers.main_handler import clear_screen
+from engram_forge.handlers.ui_helpers import clear_screen, pause
 from engram_forge.hugging_face_api import search_model
 
 CONFIG_FILE = Path("config/train_config.json")
@@ -89,11 +89,11 @@ def change_model_handler():
         for i, model in enumerate(models[:10], 1):
             model_id = model.get("id", "Unknown")
             downloads = model.get("downloads", 0)
-            print(f"  {i}. {model_id} (📥 {downloads:,} downloads)")
+            print(f"  {i}. {model_id} ({downloads:,} downloads)")
 
         if not models:
             print("\nNo models found matching your query.")
-            input("\nPress Enter to return...")
+            pause()
             continue
 
         choice = input(
@@ -104,22 +104,18 @@ def change_model_handler():
 
         selected_model = None
 
-        try:
+        if choice.isdigit() and 1 <= int(choice) <= len(models):
             index = int(choice) - 1
             if 0 <= index < len(models):
                 selected_model = models[index]["id"]
-            else:
-                print("[ERROR] Invalid number selection.")
-                input("\nPress Enter to return...")
-                continue
-        except ValueError:
+        else:
             print("[ERROR] Invalid input.")
-            input("\nPress Enter to return...")
+            pause()
             continue
 
         if not selected_model:
             print("No selected model was found")
-            input("\nPress Enter to return...")
+            pause()
             continue
         break
 
@@ -127,7 +123,7 @@ def change_model_handler():
     config["selected_model"] = selected_model
     save_config(config)
 
-    print(f"\nModel successfully saved to config: {selected_model}")
+    print(f"\nSet '{selected_model}' as model for training")
 
 
 def change_epochs_count_handler():
@@ -144,7 +140,7 @@ def change_epochs_count_handler():
 
         if not epochs_val.isdigit():
             print("[ERROR] Invalid input.")
-            input("\nPress Enter to return...")
+            pause()
             continue
         else:
             break
