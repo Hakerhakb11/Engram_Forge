@@ -7,6 +7,8 @@ from pathlib import Path
 
 from unsloth import FastModel
 
+from engram_forge.model_file_creator import create_modelfile_for_gguf
+
 PROJECT_DIR = Path(__file__).resolve().parent.parent.parent
 
 
@@ -43,6 +45,8 @@ def export_gguf(lora_name):
         print(f"Trash folder {EXPORT_DIR.name} was deleted")
 
     print(f"Done! Your GGUF file is located here: {EXPORT_DIR}")
+
+    create_modelfile_for_gguf(GGUF_DIR)
 
 
 if __name__ == "__main__":
