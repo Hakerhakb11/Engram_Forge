@@ -10,6 +10,7 @@ from engram_forge.handlers.ui_helpers import clear_screen, pause
 
 TEST_CHAT_PATH = Path(__file__).resolve().parent.parent / "test_chat.py"
 SERVE_MODEL_PATH = Path(__file__).resolve().parent.parent / "serve_model.py"
+EXPORT_GGUF_PATH = Path(__file__).resolve().parent.parent / "export_gguf.py"
 
 
 def test_chat_run(active_lora: str):
@@ -31,6 +32,15 @@ def serve_model_run(active_lora: str):
     command = [
         sys.executable,
         str(SERVE_MODEL_PATH),
+        "--lora_name", active_lora,
+    ]
+    subprocess.run(command, check=True)
+
+
+def export_gguf_model(active_lora: str):
+    command = [
+        sys.executable,
+        str(EXPORT_GGUF_PATH),
         "--lora_name", active_lora,
     ]
     subprocess.run(command, check=True)
@@ -83,8 +93,7 @@ def model_inference_handler():
                     print("\n[!] Please select a LoRA adapter first.")
                     pause()
                     continue
-                from engram_forge.export_gguf import export_gguf_model  # type: ignore
-                export_gguf_model(active_lora)#TODO
+                export_gguf_model(active_lora)
                 pause()
 
             case "0":
