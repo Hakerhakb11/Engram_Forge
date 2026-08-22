@@ -4,6 +4,7 @@ from engram_forge.handlers.ui_helpers import clear_screen, pause
 
 TRAIN_SCRIPT_PATH = Path(__file__).resolve().parent.parent / "train_v2.py"
 
+
 def handle_checkpoint_cleanup():
     """Checks existence of old checkpoints and offers to clear them"""
     import shutil

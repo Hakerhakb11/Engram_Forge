@@ -132,7 +132,7 @@ if __name__ == "__main__":
                         help="Epochs count")
 
     parser.add_argument("--lora_name", type=str, default="lora_v2",
-                            help="Name lora file")
+                        help="Name lora file")
 
     args = parser.parse_args()
     run(model_name=args.model, epochs_num=args.epochs, lora_name=args.lora_name)
