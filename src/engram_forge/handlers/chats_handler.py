@@ -23,7 +23,6 @@ def chats_handler():
                 show_chats()
 
             case "0":
-                print("\nExiting...")
                 return
 
             case _:
@@ -38,6 +37,7 @@ def import_handler():
 
     if not file_input:
         print("[ERROR] Path cannot be empty.")
+        pause()
         return
 
     file_input = file_input.strip('"').strip("'")
@@ -46,11 +46,13 @@ def import_handler():
 
     if not source_path.exists() or not source_path.is_file():
         print(f"[ERROR] File not found or it's not a file: {source_path}")
+        pause()
         return
 
     if source_path.suffix not in [".json", ".txt"]:
         print(
             f"[ERROR] Unsupported format '{source_path.suffix}'. Only .json (Telegram) and .txt (WhatsApp) are allowed.")
+        pause()
         return
 
     chats_dir = Path("chats")
@@ -60,7 +62,7 @@ def import_handler():
 
     if target_path.exists():
         print(
-            f"File '{source_path.name}' already exists in chats/.").strip().lower()
+        pause()
 
     try:
         shutil.copy2(source_path, target_path)

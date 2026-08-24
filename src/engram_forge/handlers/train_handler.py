@@ -86,14 +86,12 @@ def train_handler():
                 change_epochs_count_handler()
                 change_lora_name_handler()
                 change_model_handler()
-                pause()
 
             case "4":
                 from engram_forge.handlers.set_prompt_handler import (
                     set_name_base_prompt_handler,
                 )
                 set_name_base_prompt_handler()
-                pause()
 
             case "0":
                 print("\nExiting...")

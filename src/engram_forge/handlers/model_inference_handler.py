@@ -67,7 +67,6 @@ def model_inference_handler():
             case "1":
                 clear_screen()
                 select_lora_handler()
-                pause()
 
             case "2":
                 clear_screen()
