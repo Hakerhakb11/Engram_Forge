@@ -18,13 +18,17 @@ from unsloth.chat_templates import train_on_responses_only
 
 MAX_SEQ_LEN = 1024
 PROJECT_DIR = Path(__file__).resolve().parent.parent.parent
-TRAIN_FILE = os.path.join(PROJECT_DIR, "train_v2.jsonl")
-VAL_FILE = os.path.join(PROJECT_DIR, "val_v2.jsonl")
+TRAIN_FILE = Path(os.path.join(PROJECT_DIR, "train_v2.jsonl"))
+VAL_FILE = Path(os.path.join(PROJECT_DIR, "val_v2.jsonl"))
 
 OUT_DIR = os.path.expanduser("~/tgstyle/out")
 
 SAVE_STEPS = 50  # checkpoint ~every 30 min
 
+if not TRAIN_FILE.exists() or not VAL_FILE.exists():
+    raise FileNotFoundError(f"File {TRAIN_FILE} doesn't found! Build Dataset please.")
+if TRAIN_FILE.stat().st_size == 0 or VAL_FILE.stat().st_size == 0:
+    raise ValueError(f"File {TRAIN_FILE} is empty you need to inport chat before Build Dataset.")
 
 def run(model_name, epochs_num, lora_name):
     LORA_DIR = os.path.join(PROJECT_DIR, "lora_adapters", lora_name)
@@ -49,7 +53,7 @@ def run(model_name, epochs_num, lora_name):
     )
 
     dataset = load_dataset(
-        "json", data_files={"train": TRAIN_FILE, "validation": VAL_FILE}
+        "json", data_files={"train": str(TRAIN_FILE), "validation": str(VAL_FILE)}
     )
 
     def to_text(example):
