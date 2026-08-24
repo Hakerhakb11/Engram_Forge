@@ -31,7 +31,7 @@ def clean_reply(text):
     return text.strip()
 
 
-PROJECT_DIR = Path(__file__).resolve().parent.parent.parent
+PROJECT_DIR = Path(__file__).resolve().parent.parent.parent.parent
 MAX_SEQ_LEN = 1024
 
 my_name = get_name()

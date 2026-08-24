@@ -7,7 +7,7 @@ from pathlib import Path
 
 from unsloth import FastModel
 
-from engram_forge.model_file_creator import create_modelfile_for_gguf
+from engram_forge.export.model_file_creator import create_modelfile_for_gguf
 
 PROJECT_DIR = Path(__file__).resolve().parent.parent.parent
 

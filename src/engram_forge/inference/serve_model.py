@@ -21,7 +21,7 @@ from engram_forge.get_user_config import (
 
 HOST, PORT = "127.0.0.1", 8008
 
-PROJECT_DIR = Path(__file__).resolve().parent.parent.parent
+PROJECT_DIR = Path(__file__).resolve().parent.parent.parent.parent
 
 MAX_SEQ_LEN = 1024
 HISTORY_MAX = 20  # context replies (trained on 10)
