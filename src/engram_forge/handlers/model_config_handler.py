@@ -4,7 +4,9 @@ from pathlib import Path
 from engram_forge.handlers.ui_helpers import clear_screen, pause
 from engram_forge.hugging_face_api import search_model
 
-CONFIG_FILE = Path("config/train_config.json")
+PROJECT_DIR = Path(__file__).resolve().parent.parent.parent.parent
+
+CONFIG_FILE = Path(PROJECT_DIR, "config/train_config.json")
 DEFAULT_CONFIG = {
     "selected_model": "unsloth/Qwen3.5-4B",
     "epochs_count": 2,

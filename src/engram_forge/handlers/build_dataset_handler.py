@@ -1,3 +1,5 @@
+from pathlib import Path
+
 from engram_forge.parser import build_dataset, sanitize_jsonl, split_dataset
 
 
@@ -22,6 +24,8 @@ def build_dataset_handler():
             case _:
                 break
 
-    build_dataset.run()
-    sanitize_jsonl.run()
-    split_dataset.run()
+    PROJECT_DIR = Path(__file__).resolve().parent.parent.parent.parent
+
+    build_dataset.run(PROJECT_DIR)
+    sanitize_jsonl.run(PROJECT_DIR)
+    split_dataset.run(PROJECT_DIR)

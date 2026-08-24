@@ -3,6 +3,8 @@ from pathlib import Path
 
 from engram_forge.handlers.ui_helpers import clear_screen, pause
 
+PROJECT_DIR = Path(__file__).resolve().parent.parent.parent.parent
+
 
 def chats_handler():
     while True:
@@ -30,8 +32,10 @@ def chats_handler():
 
 
 def import_handler():
-    print("You can drag and drop your chat file (.json or .txt) directly into this window."
-          "or paste full path to the file.")
+    print("In native Linux, you can drag and drop your chat file (.json or .txt) directly into this window."
+          "\nor paste full path to the file."
+          "\nIn WSL linux only the option of manually entering the path."
+          "\nHowever, you can always move the chats yourself to the `chats/` folder in the project root.")
 
     file_input = input("Enter path to file: ").strip()
 
@@ -42,7 +46,7 @@ def import_handler():
 
     file_input = file_input.strip('"').strip("'")
 
-    source_path = Path(file_input)
+    source_path = Path(file_input).expanduser()
 
     if not source_path.exists() or not source_path.is_file():
         print(f"[ERROR] File not found or it's not a file: {source_path}")
@@ -55,14 +59,16 @@ def import_handler():
         pause()
         return
 
-    chats_dir = Path("chats")
+    chats_dir = Path(PROJECT_DIR, "chats")
     chats_dir.mkdir(parents=True, exist_ok=True)
 
     target_path = chats_dir / source_path.name
 
     if target_path.exists():
         print(
+            f"File '{source_path.name}' already exists in chats/.")
         pause()
+        return
 
     try:
         shutil.copy2(source_path, target_path)
@@ -76,7 +82,7 @@ def import_handler():
 
 def show_chats():
     print("\nImported chats:")
-    chats_dir = Path("chats")
+    chats_dir = Path(PROJECT_DIR, "chats")
     if not chats_dir.exists():
         print(f"{chats_dir} directory not found. Creating...")
         chats_dir.mkdir(parents=True, exist_ok=True)

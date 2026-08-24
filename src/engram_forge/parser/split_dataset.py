@@ -1,11 +1,14 @@
 # split_dataset.py — train/val split multi-turn dataset
+import json
+import random
 from pathlib import Path
 
 
-def run(input_path="dataset_sanitized.jsonl", train_out_path="train_v2.jsonl", value_out_path="val_v2.jsonl"):
-    import json
-    import random
-
+def run(PROJECT_DIR):
+    input_path:Path = PROJECT_DIR / "train_data/dataset_sanitized.jsonl"
+    train_out_path:Path = PROJECT_DIR / "train_data/train_v2.jsonl"
+    value_out_path:Path = PROJECT_DIR / "train_data/val_v2.jsonl"
+    
     VAL_FRACTION = 0.03
     VAL_MIN = 300
 

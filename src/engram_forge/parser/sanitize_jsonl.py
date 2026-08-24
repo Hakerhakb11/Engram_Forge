@@ -126,7 +126,10 @@ def sanitize_text(text: str, stats: Counter) -> str:
     return text
 
 
-def run(input_path: str = 'dataset.jsonl', output_path: str = 'dataset_sanitized.jsonl') -> Counter:
+def run(PROJECT_DIR) -> Counter:
+    input_path: Path = PROJECT_DIR / 'train_data/dataset.jsonl'
+    output_path: Path = PROJECT_DIR / 'train_data/dataset_sanitized.jsonl'
+
     try:
         print("\nSANITIZE Start -----------------.")
 
