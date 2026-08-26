@@ -7,8 +7,8 @@ from pathlib import Path
 
 import ijson
 
-from engram_forge.get_user_config import get_base_prompt, get_name
 from engram_forge.parser.user_id_finder import user_id_finder
+from engram_forge.utils.get_user_config import get_base_prompt, get_name
 
 SESSION_GAP = 4 * 3600      # gap of more than 4 hours = new dialog
 BURST_GAP = 300             # same author after a pause >5 min = new dialog
