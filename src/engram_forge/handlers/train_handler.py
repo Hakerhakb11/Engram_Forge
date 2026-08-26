@@ -14,8 +14,8 @@ def handle_checkpoint_cleanup():
         choice = (
             input(
                 "\n[ALERT]If you change your dataset or model for train, YOU NEED TO CLEAR PREVIOUS CHECKPOINTS"
-                "CLEAR previous checkpoints and start from scratch?"
-                " ('yes' to Clear, 'Enter' to skip ")
+                "\nCLEAR previous checkpoints and start from scratch?"
+                "\n('yes' to Clear, 'Enter' to skip ")
             .strip()
             .lower()
         )
@@ -32,7 +32,7 @@ def train_run_handler():
     import subprocess
     import sys
 
-    from engram_forge.handlers.model_config_handler import (
+    from engram_forge.handlers.train_config_handler import (
         get_epochs_count,
         get_lora_name,
         get_model_name,
@@ -77,7 +77,7 @@ def train_handler():
                 pause()
 
             case "3":
-                from engram_forge.handlers.model_config_handler import (
+                from engram_forge.handlers.train_config_handler import (
                     change_epochs_count_handler,
                     change_lora_name_handler,
                     change_model_handler,
@@ -86,14 +86,12 @@ def train_handler():
                 change_epochs_count_handler()
                 change_lora_name_handler()
                 change_model_handler()
-                pause()
 
             case "4":
                 from engram_forge.handlers.set_prompt_handler import (
                     set_name_base_prompt_handler,
                 )
                 set_name_base_prompt_handler()
-                pause()
 
             case "0":
                 print("\nExiting...")

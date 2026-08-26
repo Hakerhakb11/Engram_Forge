@@ -14,14 +14,15 @@ from pathlib import Path
 
 from unsloth import FastModel
 
-from engram_forge.get_user_config import (
+from engram_forge.utils.get_json_config import load_config
+from engram_forge.utils.get_user_config import (
     get_name,
     get_prompt_for_chatting,
 )
 
 HOST, PORT = "127.0.0.1", 8008
 
-PROJECT_DIR = Path(__file__).resolve().parent.parent.parent
+PROJECT_DIR = Path(__file__).resolve().parent.parent.parent.parent
 
 MAX_SEQ_LEN = 1024
 HISTORY_MAX = 20  # context replies (trained on 10)
@@ -35,6 +36,19 @@ parser = argparse.ArgumentParser(description="QLoRA train model")
 parser.add_argument("--lora_name", type=str, default="lora_v2",
                     help="Name lora file")
 args = parser.parse_args()
+
+
+CONFIG_FILE: Path = PROJECT_DIR / "config/model_run_config.json"
+DEFAULT_CONFIG = {
+    "temperature": 0.5,
+    "repetition_penalty": 1.14,
+    "max_tokens": 400
+}
+
+config = load_config(CONFIG_FILE, DEFAULT_CONFIG)
+temperature: float = config.get("temperature")
+repeat_penalty: float = config.get("repetition_penalty")
+max_tokens: int = config.get("max_tokens")
 
 
 print("Loading model...")
@@ -72,7 +86,7 @@ def merge_roles(history):
     return merged
 
 
-def generate_reply(contact, history, system_extra="", temperature=0.6, top_p=0.8):
+def generate_reply(contact, history, system_extra="", top_p=0.8):
     system = system_tmpl_with_facts.format(
         my_name=my_name, contact_name=contact)
     # RAG-memory: contact dossier + "what's going on with me right now" (stage 4)
@@ -92,10 +106,10 @@ def generate_reply(contact, history, system_extra="", temperature=0.6, top_p=0.8
     with GEN_LOCK:
         out = model.generate(
             **inputs,
-            max_new_tokens=200,
+            max_new_tokens=max_tokens,
             temperature=temperature,
             top_p=top_p,
-            repetition_penalty=1.18,
+            repetition_penalty=repeat_penalty,
             do_sample=True,
             eos_token_id=IM_END,
             pad_token_id=IM_END,
@@ -115,7 +129,6 @@ class Handler(BaseHTTPRequestHandler):
                 int(self.headers["Content-Length"])))
             reply = generate_reply(body.get("contact") or "знакомый", body["messages"],
                                    body.get("system_extra", ""),
-                                   float(body.get("temperature", 0.6)),
                                    float(body.get("top_p", 0.8)))
             data = json.dumps({"reply": reply},
                               ensure_ascii=False).encode("utf-8")

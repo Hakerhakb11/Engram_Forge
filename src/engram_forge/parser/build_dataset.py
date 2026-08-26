@@ -7,8 +7,8 @@ from pathlib import Path
 
 import ijson
 
-from engram_forge.get_user_config import get_base_prompt, get_name
 from engram_forge.parser.user_id_finder import user_id_finder
+from engram_forge.utils.get_user_config import get_base_prompt, get_name
 
 SESSION_GAP = 4 * 3600      # gap of more than 4 hours = new dialog
 BURST_GAP = 300             # same author after a pause >5 min = new dialog
@@ -240,19 +240,23 @@ def process_chat(name, msgs, stats, out):
                 )
 
 
-def run(chats_dir="chats", out_path="dataset.jsonl"):
+def run(PROJECT_DIR):
+    input_dir_with_chats: Path = PROJECT_DIR / "chats"
+    out_path: Path = PROJECT_DIR / "train_data/dataset.jsonl"
+
     try:
         print("\nBUILD DATASET Start -----------------.")
         stats = {"chats": 0, "sessions": 0,
                  "windows": 0, "samples": 0, "my_turns": 0}
 
-        chats_dir = Path(chats_dir)
-        if not chats_dir.exists():
-            print(f"{chats_dir} directory not found:")
+        if not input_dir_with_chats.exists():
+            print(f"{input_dir_with_chats} directory not found:")
             return
 
+        out_path.parent.mkdir(parents=True, exist_ok=True)
+        
         with open(out_path, "w", encoding="utf-8") as out:
-            for filepath in chats_dir.iterdir():
+            for filepath in input_dir_with_chats.iterdir():
                 if not filepath.is_file():
                     continue
 

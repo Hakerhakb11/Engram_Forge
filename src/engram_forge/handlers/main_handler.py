@@ -24,7 +24,6 @@ def main_handler():
                 from engram_forge.handlers.chats_handler import chats_handler
                 clear_screen()
                 chats_handler()
-                pause()
 
             case "3":
                 from engram_forge.handlers.set_prompt_handler import (
@@ -39,7 +38,6 @@ def main_handler():
                 )
                 clear_screen()
                 model_inference_handler()
-                pause()
 
             case "0":
                 print("\nExiting...")

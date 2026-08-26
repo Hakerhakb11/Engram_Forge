@@ -1,10 +1,12 @@
-import json
 from pathlib import Path
 
 from engram_forge.handlers.ui_helpers import clear_screen, pause
-from engram_forge.hugging_face_api import search_model
+from engram_forge.utils.get_json_config import load_config, save_config
+from engram_forge.utils.hugging_face_api import search_model
 
-CONFIG_FILE = Path("config/train_config.json")
+PROJECT_DIR = Path(__file__).resolve().parent.parent.parent.parent
+
+CONFIG_FILE = Path(PROJECT_DIR, "config/train_config.json")
 DEFAULT_CONFIG = {
     "selected_model": "unsloth/Qwen3.5-4B",
     "epochs_count": 2,
@@ -12,38 +14,16 @@ DEFAULT_CONFIG = {
 }
 
 
-def load_config() -> dict:
-    """Universal config loading with automatic creation default values"""
-    CONFIG_FILE.parent.mkdir(parents=True, exist_ok=True)
-    try:
-        if not CONFIG_FILE.exists():
-            save_config(DEFAULT_CONFIG)
-            return DEFAULT_CONFIG.copy()
-        return json.loads(CONFIG_FILE.read_text(encoding="utf-8"))
-    except (FileNotFoundError, json.JSONDecodeError):
-        save_config(DEFAULT_CONFIG)
-        return DEFAULT_CONFIG.copy()
-
-
-def save_config(config_data: dict):
-    """Universal config saving."""
-    CONFIG_FILE.parent.mkdir(parents=True, exist_ok=True)
-    CONFIG_FILE.write_text(
-        json.dumps(config_data, indent=4, ensure_ascii=False),
-        encoding="utf-8"
-    )
-
-
 def get_model_name() -> str:
-    return load_config().get("selected_model", DEFAULT_CONFIG["selected_model"])
+    return load_config(CONFIG_FILE, DEFAULT_CONFIG).get("selected_model")
 
 
 def get_epochs_count() -> int:
-    return load_config().get("epochs_count", DEFAULT_CONFIG["epochs_count"])
+    return load_config(CONFIG_FILE, DEFAULT_CONFIG).get("epochs_count")
 
 
 def get_lora_name() -> str:
-    return load_config().get("lora_name", DEFAULT_CONFIG["lora_name"])
+    return load_config(CONFIG_FILE, DEFAULT_CONFIG).get("lora_name")
 
 
 def remove_bad_models(raw_models) -> list:
@@ -119,9 +99,9 @@ def change_model_handler():
             continue
         break
 
-    config = load_config()
+    config = load_config(CONFIG_FILE, DEFAULT_CONFIG)
     config["selected_model"] = selected_model
-    save_config(config)
+    save_config(CONFIG_FILE, config)
 
     print(f"\nSet '{selected_model}' as model for training")
 
@@ -145,9 +125,9 @@ def change_epochs_count_handler():
         else:
             break
 
-    config = load_config()
+    config = load_config(CONFIG_FILE, DEFAULT_CONFIG)
     config["epochs_count"] = epochs_val
-    save_config(config)
+    save_config(CONFIG_FILE, config)
 
     print(f"\nEpochs successfully saved: {epochs_val}")
 
@@ -162,8 +142,8 @@ def change_lora_name_handler():
         print("Cancelled.")
         return
 
-    config = load_config()
+    config = load_config(CONFIG_FILE, DEFAULT_CONFIG)
     config["lora_name"] = input_lora_name
-    save_config(config)
+    save_config(CONFIG_FILE, config)
 
     print(f"\nLoRA name successfully saved: {input_lora_name}")
