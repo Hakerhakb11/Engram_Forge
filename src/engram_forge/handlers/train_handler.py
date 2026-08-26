@@ -14,8 +14,8 @@ def handle_checkpoint_cleanup():
         choice = (
             input(
                 "\n[ALERT]If you change your dataset or model for train, YOU NEED TO CLEAR PREVIOUS CHECKPOINTS"
-                "CLEAR previous checkpoints and start from scratch?"
-                " ('yes' to Clear, 'Enter' to skip ")
+                "\nCLEAR previous checkpoints and start from scratch?"
+                "\n('yes' to Clear, 'Enter' to skip ")
             .strip()
             .lower()
         )
