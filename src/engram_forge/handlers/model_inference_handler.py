@@ -6,11 +6,14 @@ from engram_forge.handlers.inference_config_handler import (
     get_active_lora,
     select_lora_handler,
 )
+from engram_forge.handlers.model_configuration_handler import (
+    model_configuration_handler,
+)
 from engram_forge.handlers.ui_helpers import clear_screen, pause
 
-TEST_CHAT_PATH = Path(__file__).resolve().parent.parent / "test_chat.py"
-SERVE_MODEL_PATH = Path(__file__).resolve().parent.parent / "serve_model.py"
-EXPORT_GGUF_PATH = Path(__file__).resolve().parent.parent / "export_gguf.py"
+TEST_CHAT_PATH = Path(__file__).resolve().parent.parent / "inference/test_chat.py"
+SERVE_MODEL_PATH = Path(__file__).resolve().parent.parent / "inference/serve_model.py"
+EXPORT_GGUF_PATH = Path(__file__).resolve().parent.parent / "export/export_gguf.py"
 
 
 def test_chat_run(active_lora: str):
@@ -56,9 +59,10 @@ def model_inference_handler():
         print(f"\nActive LoRA: {display_lora}")
         print("\nWhat you want to do?"
               "\n1. Select Lora Adapter to use, or just show"
-              "\n2. Test chat"
-              "\n3. Serve model to HTTP server"
-              "\n4. Export model as .gguf file"
+              "\n2. Model run configuration"
+              "\n3. Test chat"
+              "\n4. Serve model to HTTP server"
+              "\n5. Export model as .gguf file"
               "\n0. Exit"
               )
 
@@ -70,6 +74,10 @@ def model_inference_handler():
 
             case "2":
                 clear_screen()
+                model_configuration_handler()
+
+            case "3":
+                clear_screen()
                 if not active_lora:
                     print("\n[!] Please select a LoRA adapter first.")
                     pause()
@@ -77,7 +85,7 @@ def model_inference_handler():
                 test_chat_run(active_lora)
                 pause()
 
-            case "3":
+            case "4":
                 clear_screen()
                 if not active_lora:
                     print("\n[!] Please select a LoRA adapter first.")
@@ -86,7 +94,7 @@ def model_inference_handler():
                 serve_model_run(active_lora)
                 pause()
 
-            case "4":
+            case "5":
                 clear_screen()
                 if not active_lora:
                     print("\n[!] Please select a LoRA adapter first.")
