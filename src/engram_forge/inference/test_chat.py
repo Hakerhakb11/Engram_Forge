@@ -24,7 +24,7 @@ MAX_SEQ_LEN = 1024
 my_name = get_name()
 system_tmpl_with_facts = get_prompt_for_chatting()
 
-CONFIG_FILE: Path = PROJECT_DIR, "config/model_run_config.json"
+CONFIG_FILE: Path = PROJECT_DIR / "config/model_run_config.json"
 DEFAULT_CONFIG = {
     "temperature": 0.5,
     "repeat_penalty": 1.14,

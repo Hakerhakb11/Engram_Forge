@@ -5,7 +5,6 @@
 # Final LoRA copy in project folder (lora_adapters/{lora_file}).
 
 import os  # noqa: I001
-import shutil  # noqa: F401
 import argparse
 from pathlib import Path
 
@@ -18,8 +17,8 @@ from unsloth.chat_templates import train_on_responses_only
 
 MAX_SEQ_LEN = 1024
 PROJECT_DIR = Path(__file__).resolve().parent.parent.parent
-TRAIN_FILE = Path(os.path.join(PROJECT_DIR, "train_v2.jsonl"))
-VAL_FILE = Path(os.path.join(PROJECT_DIR, "val_v2.jsonl"))
+TRAIN_FILE: Path = PROJECT_DIR / "train_data/train_v2.jsonl"
+VAL_FILE: Path = PROJECT_DIR / "train_data/val_v2.jsonl"
 
 OUT_DIR = os.path.expanduser("~/tgstyle/out")
 

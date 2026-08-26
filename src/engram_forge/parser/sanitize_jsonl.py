@@ -157,7 +157,7 @@ def run(PROJECT_DIR) -> Counter:
 
         stats["bad_lines"] = bad_lines
         print("SANITIZE Done.")
-        print("Delete: " + (input_path))
+        print("Delete:", input_path)
         Path(input_path).unlink(missing_ok=True)
         print("Stats:")
         for k, v in stats.most_common():

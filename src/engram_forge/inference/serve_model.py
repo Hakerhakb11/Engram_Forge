@@ -38,7 +38,7 @@ parser.add_argument("--lora_name", type=str, default="lora_v2",
 args = parser.parse_args()
 
 
-CONFIG_FILE: Path = PROJECT_DIR, "config/model_run_config.json"
+CONFIG_FILE: Path = PROJECT_DIR / "config/model_run_config.json"
 DEFAULT_CONFIG = {
     "temperature": 0.5,
     "repetition_penalty": 1.14,

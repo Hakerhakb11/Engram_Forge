@@ -41,7 +41,7 @@ def run(PROJECT_DIR):
             f.writelines(json.dumps(r, ensure_ascii=False) + "\n" for r in val)
 
         print("DONE.")
-        print("Delete: " + input_path)
+        print("Delete:", input_path)
         Path(input_path).unlink(missing_ok=True)
         print("All:", len(rows))
         print("Train:", len(train))

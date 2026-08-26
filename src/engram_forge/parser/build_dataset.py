@@ -241,8 +241,8 @@ def process_chat(name, msgs, stats, out):
 
 
 def run(PROJECT_DIR):
-    input_dir_with_chats:Path = PROJECT_DIR / "chats"
-    out_path:Path = PROJECT_DIR / "train_data/dataset.jsonl"
+    input_dir_with_chats: Path = PROJECT_DIR / "chats"
+    out_path: Path = PROJECT_DIR / "train_data/dataset.jsonl"
 
     try:
         print("\nBUILD DATASET Start -----------------.")
@@ -253,6 +253,8 @@ def run(PROJECT_DIR):
             print(f"{input_dir_with_chats} directory not found:")
             return
 
+        out_path.parent.mkdir(parents=True, exist_ok=True)
+        
         with open(out_path, "w", encoding="utf-8") as out:
             for filepath in input_dir_with_chats.iterdir():
                 if not filepath.is_file():

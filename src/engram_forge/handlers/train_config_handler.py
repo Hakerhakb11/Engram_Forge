@@ -15,15 +15,15 @@ DEFAULT_CONFIG = {
 
 
 def get_model_name() -> str:
-    return load_config().get("selected_model", DEFAULT_CONFIG["selected_model"])
+    return load_config(CONFIG_FILE, DEFAULT_CONFIG).get("selected_model")
 
 
 def get_epochs_count() -> int:
-    return load_config().get("epochs_count", DEFAULT_CONFIG["epochs_count"])
+    return load_config(CONFIG_FILE, DEFAULT_CONFIG).get("epochs_count")
 
 
 def get_lora_name() -> str:
-    return load_config().get("lora_name", DEFAULT_CONFIG["lora_name"])
+    return load_config(CONFIG_FILE, DEFAULT_CONFIG).get("lora_name")
 
 
 def remove_bad_models(raw_models) -> list:
@@ -99,9 +99,9 @@ def change_model_handler():
             continue
         break
 
-    config = load_config()
+    config = load_config(CONFIG_FILE, DEFAULT_CONFIG)
     config["selected_model"] = selected_model
-    save_config(config)
+    save_config(CONFIG_FILE, config)
 
     print(f"\nSet '{selected_model}' as model for training")
 
@@ -125,9 +125,9 @@ def change_epochs_count_handler():
         else:
             break
 
-    config = load_config()
+    config = load_config(CONFIG_FILE, DEFAULT_CONFIG)
     config["epochs_count"] = epochs_val
-    save_config(config)
+    save_config(CONFIG_FILE, config)
 
     print(f"\nEpochs successfully saved: {epochs_val}")
 
@@ -142,8 +142,8 @@ def change_lora_name_handler():
         print("Cancelled.")
         return
 
-    config = load_config()
+    config = load_config(CONFIG_FILE, DEFAULT_CONFIG)
     config["lora_name"] = input_lora_name
-    save_config(config)
+    save_config(CONFIG_FILE, config)
 
     print(f"\nLoRA name successfully saved: {input_lora_name}")
