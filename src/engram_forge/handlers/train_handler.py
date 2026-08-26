@@ -32,7 +32,7 @@ def train_run_handler():
     import subprocess
     import sys
 
-    from engram_forge.handlers.model_config_handler import (
+    from engram_forge.handlers.train_config_handler import (
         get_epochs_count,
         get_lora_name,
         get_model_name,
@@ -77,7 +77,7 @@ def train_handler():
                 pause()
 
             case "3":
-                from engram_forge.handlers.model_config_handler import (
+                from engram_forge.handlers.train_config_handler import (
                     change_epochs_count_handler,
                     change_lora_name_handler,
                     change_model_handler,

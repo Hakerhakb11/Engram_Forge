@@ -1,4 +1,16 @@
-from engram_forge.get_user_config import get_name, get_prompt_for_chatting
+from pathlib import Path
+
+from engram_forge.utils.get_json_config import load_config
+from engram_forge.utils.get_user_config import get_name, get_prompt_for_chatting
+
+PROJECT_DIR = Path(__file__).resolve().parent.parent.parent.parent
+
+CONFIG_FILE: Path = PROJECT_DIR / "config/model_run_config.json"
+DEFAULT_CONFIG = {
+    "temperature": 0.5,
+    "repeat_penalty": 1.14,
+    "max_tokens": 400
+}
 
 
 def create_modelfile_for_gguf(GGUF_DIR):
@@ -8,6 +20,11 @@ def create_modelfile_for_gguf(GGUF_DIR):
         system_prompt = get_prompt_for_chatting().format(
             my_name=get_name(), contact_name="(имя неизвестно, спроси у собеседника если нужно)")
 
+        config = load_config(CONFIG_FILE, DEFAULT_CONFIG)
+        temperature: float = config.get("temperature")
+        repeat_penalty: float = config.get("repeat_penalty")
+        max_tokens: int = config.get("max_tokens")
+        
         modelfile_content = f"""# ==========================================
 # HOW TO ADD THIS MODEL TO OLLAMA:
 # 1. Open terminal in this folder (folder with Modelfile and .gguf file)
@@ -18,11 +35,11 @@ def create_modelfile_for_gguf(GGUF_DIR):
 
 FROM ./{gguf_filename}
 
-PARAMETER temperature 0.5
+PARAMETER temperature {temperature}
+PARAMETER repeat_penalty {repeat_penalty}
+PARAMETER num_predict {max_tokens}
 PARAMETER top_p 0.8
 PARAMETER top_k 40
-PARAMETER repeat_penalty 1.14
-PARAMETER num_predict 100
 
 PARAMETER stop "<|im_end|>"
 PARAMETER stop "<|im_start|>"

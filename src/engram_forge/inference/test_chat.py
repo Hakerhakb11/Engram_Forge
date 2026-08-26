@@ -12,15 +12,32 @@ from pathlib import Path
 from transformers import TextStreamer
 from unsloth import FastModel
 
-from engram_forge.get_user_config import (
+from engram_forge.utils.get_json_config import load_config
+from engram_forge.utils.get_user_config import (
     get_name,
     get_prompt_for_chatting,
 )
 
-THINK_RE = re.compile(r"<think>.*?</think>", re.DOTALL)
+PROJECT_DIR = Path(__file__).resolve().parent.parent.parent.parent
+MAX_SEQ_LEN = 1024
+
+my_name = get_name()
+system_tmpl_with_facts = get_prompt_for_chatting()
+
+CONFIG_FILE: Path = PROJECT_DIR, "config/model_run_config.json"
+DEFAULT_CONFIG = {
+    "temperature": 0.5,
+    "repeat_penalty": 1.14,
+    "max_tokens": 400
+}
+config = load_config(CONFIG_FILE, DEFAULT_CONFIG)
+temperature: float = config.get("temperature")
+repeat_penalty: float = config.get("repeat_penalty")
+max_tokens: int = config.get("max_tokens")
 
 
 def clean_reply(text):
+    THINK_RE = re.compile(r"<think>.*?</think>", re.DOTALL)
     """Removes thinking blocks, including unclosed ones (truncated by token limit),
     so they don't enter the dialogue history and ruin subsequent answers."""
     text = THINK_RE.sub("", text)
@@ -29,13 +46,6 @@ def clean_reply(text):
     if "<think>" in text:  # block is open but not closed — the rest is just thoughts
         text = text.split("<think>")[0]
     return text.strip()
-
-
-PROJECT_DIR = Path(__file__).resolve().parent.parent.parent.parent
-MAX_SEQ_LEN = 1024
-
-my_name = get_name()
-system_tmpl_with_facts = get_prompt_for_chatting()
 
 
 def run(contact="friend", lora_name="lora_v2"):
@@ -94,11 +104,11 @@ def run(contact="friend", lora_name="lora_v2"):
         print(f"{my_name}: ", end="", flush=True)
         out = model.generate(
             **inputs,
-            max_new_tokens=100,
-            temperature=0.5,
+            max_new_tokens=max_tokens,
+            temperature=temperature,
             top_p=0.8,
             top_k=40,
-            repetition_penalty=1.14,
+            repetition_penalty=repeat_penalty,
             do_sample=True,
             eos_token_id=im_end,
             pad_token_id=im_end,

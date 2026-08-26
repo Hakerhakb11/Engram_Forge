@@ -1,9 +1,9 @@
-from engram_forge.get_user_config import (
+from engram_forge.handlers.main_handler import clear_screen
+from engram_forge.utils.get_user_config import (
     get_base_prompt,
     get_chat_prompt,
     get_name,
 )
-from engram_forge.handlers.main_handler import clear_screen
 
 
 def get_multiline_input() -> str:
