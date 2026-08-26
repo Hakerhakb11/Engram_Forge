@@ -1,8 +1,8 @@
-import json
 from pathlib import Path
 
 from engram_forge.handlers.ui_helpers import clear_screen, pause
-from engram_forge.hugging_face_api import search_model
+from engram_forge.utils.get_json_config import load_config, save_config
+from engram_forge.utils.hugging_face_api import search_model
 
 PROJECT_DIR = Path(__file__).resolve().parent.parent.parent.parent
 
@@ -12,28 +12,6 @@ DEFAULT_CONFIG = {
     "epochs_count": 2,
     "lora_name": "lora_v2"
 }
-
-
-def load_config() -> dict:
-    """Universal config loading with automatic creation default values"""
-    CONFIG_FILE.parent.mkdir(parents=True, exist_ok=True)
-    try:
-        if not CONFIG_FILE.exists():
-            save_config(DEFAULT_CONFIG)
-            return DEFAULT_CONFIG.copy()
-        return json.loads(CONFIG_FILE.read_text(encoding="utf-8"))
-    except (FileNotFoundError, json.JSONDecodeError):
-        save_config(DEFAULT_CONFIG)
-        return DEFAULT_CONFIG.copy()
-
-
-def save_config(config_data: dict):
-    """Universal config saving."""
-    CONFIG_FILE.parent.mkdir(parents=True, exist_ok=True)
-    CONFIG_FILE.write_text(
-        json.dumps(config_data, indent=4, ensure_ascii=False),
-        encoding="utf-8"
-    )
 
 
 def get_model_name() -> str:
